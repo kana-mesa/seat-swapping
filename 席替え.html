@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>席替え</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2ef;--sf:#fbfcfa;--ink:#2f3b37;--mut:#7d8c86;--ln:#d9e1dc;--ac:#5f8f7d;--acs:#dcebe4;--on:#fff;--m:#d3e3ee;--mi:#2f4a5e;--f:#f3d9d6;--fi:#6a3d3d;--bad:#c4756b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c2320;--sf:#262f2b;--ink:#e3ebe7;--mut:#8fa098;--ln:#38443f;--ac:#85b5a2;--acs:#2e403a;--on:#14201b;--m:#2f4656;--mi:#cfe2ef;--f:#573b3b;--fi:#f1d6d3;--bad:#d98c82}}
+:root[data-theme="dark"]{--bg:#1c2320;--sf:#262f2b;--ink:#e3ebe7;--mut:#8fa098;--ln:#38443f;--ac:#85b5a2;--acs:#2e403a;--on:#14201b;--m:#2f4656;--mi:#cfe2ef;--f:#573b3b;--fi:#f1d6d3;--bad:#d98c82}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button,input{font:inherit;color:inherit}
+button{border:0;cursor:pointer}
+svg{display:block;flex:none}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg)}
+.sp{flex:1}
+.ib{width:42px;height:42px;border-radius:14px;background:var(--sf);color:var(--ink);display:flex;align-items:center;justify-content:center}
+.ib.on{background:var(--acs);color:var(--ac)}
+.ib.pri{background:var(--ac);color:var(--on)}
+.ib.sm{width:36px;height:36px;border-radius:12px}
+.ib.lb{width:auto;padding:0 12px;gap:6px;font-size:14px;font-weight:500;white-space:nowrap}
+.seg .ib.lb{width:auto;padding:0 10px}
+.stp span{margin-right:4px;font-size:14px}
+.mini .st{border-radius:10px;padding:2px}.mini .n{font-size:13px}
+.sh .st:not(.m):not(.f):not(.x){background:var(--bg)}
+.sh .rw input{background:var(--bg)}
+.sh .ib:not(.on):not(.pri){background:var(--bg)}
+.bar{flex-wrap:wrap}
+.wrap{max-width:900px;margin:0 auto;padding:0 12px 28px}
+.set{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+.stp{display:flex;align-items:center;gap:2px;background:var(--sf);border-radius:14px;padding:3px 3px 3px 10px;color:var(--mut)}
+.stp b{min-width:24px;text-align:center;color:var(--ink);font-size:16px}
+.seg{display:flex;gap:3px;background:var(--sf);border-radius:14px;padding:3px}
+.seg .ib{width:36px;height:36px;border-radius:11px;background:transparent;color:var(--mut)}
+.seg .ib.on{background:var(--acs);color:var(--ac)}
+.cnt{margin-left:auto;font-size:13px;color:var(--mut);padding:0 6px}
+.cnt.bad{color:var(--bad);font-weight:700}
+.front{display:flex;align-items:center;justify-content:center;gap:6px;height:32px;border-radius:12px;background:var(--acs);color:var(--ac);font-size:13px;font-weight:700;margin-bottom:10px}
+.gw{overflow-x:auto;padding-bottom:4px}
+.grid{display:grid;gap:8px;grid-template-columns:repeat(var(--c),minmax(var(--w,58px),1fr));min-width:calc(var(--c)*var(--w,58px) + (var(--c) - 1)*8px)}
+.st{aspect-ratio:1/.85;border-radius:14px;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px;position:relative;background:var(--sf);color:var(--mut);min-width:0}
+.st.m{background:var(--m);color:var(--mi)}
+.st.f{background:var(--f);color:var(--fi)}
+.st.x{background:transparent;border:2px dashed var(--ln)}
+.st .n{font-weight:700;font-size:16px;line-height:1.1}
+.st .nm{font-size:11px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.st .pn{position:absolute;top:4px;right:4px;opacity:.7}
+.rw{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rw input{height:42px;border:0;border-radius:14px;background:var(--sf);padding:0 12px;min-width:0;outline-offset:0}
+.rw input:focus,.ib:focus-visible,.st:focus-visible,.chip:focus-visible{outline:2px solid var(--ac)}
+.rw .no{width:60px;text-align:center}
+.rw .nm2{flex:1}
+.g{width:42px;height:42px;border-radius:14px;font-weight:700}
+.g.m,.chip.m{background:var(--m);color:var(--mi)}
+.g.f,.chip.f{background:var(--f);color:var(--fi)}
+.pk{color:var(--ac);width:20px}
+.ov{position:fixed;inset:0;z-index:20;background:rgba(20,28,25,.45);display:flex;align-items:flex-end;justify-content:center}
+.sh{width:min(560px,100%);max-height:72vh;overflow:auto;background:var(--sf);border-radius:22px 22px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px))}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{border-radius:12px;padding:8px 12px;font-weight:500;display:flex;gap:6px;align-items:center}
+.chip.used{opacity:.45}
+.pop{position:absolute;right:12px;top:100%;display:flex;gap:6px;background:var(--sf);border-radius:16px;padding:6px;z-index:6}
+.pop .ib{background:var(--bg)}
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<div class="wrap" id="main"></div>
+<div id="ov"></div>
+<input type="file" id="file" accept=".xml,.txt,text/xml" hidden>
+<script>
+const IC={
+shuf:'<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
+dl:'<path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/>',
+up:'<path d="M12 15V4m0 0L8 8m4-4 4 4M5 20h14"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',minus:'<path d="M5 12h14"/>',
+trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+pin:'<path d="M9 3h6l-1 6 3 3H7l3-3-1-6zM12 12v9"/>',
+grid:'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>',
+list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+cols:'<path d="M5 4v16M12 4v16M19 4v16"/>',rows:'<path d="M4 5h16M4 12h16M4 19h16"/>',
+alt:'<rect x="4" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="13" y="13" width="7" height="7" rx="2" fill="currentColor"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/>',
+mix:'<rect x="4" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="13" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2" fill="currentColor"/>',
+pair:'<circle cx="8" cy="8" r="3"/><path d="M3 20c0-3 2-5 5-5s5 2 5 5M15 7l2.5 2.5L22 5"/>',
+img:'<path d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4M15 9h.01"/>',
+code:'<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 6l-2 12"/>',
+arr:'<path d="M12 19V5M6 11l6-6 6 6"/>',
+x:'<path d="M6 6l12 12M18 6 6 18"/>',
+block:'<circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/>'};
+const ic=(n,s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=s=>document.querySelector(s);
+const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let tab='seat',menu=false,modal=null,pickFor=null;
+let S=(()=>{try{return JSON.parse(localStorage.getItem('seat-v2'))}catch(e){return null}})();
+if(!S||!S.students){S={cols:7,rows:6,mode:'alt',avoid:true,pins:{},blocked:{},layout:[],nid:43,students:Array.from({length:42},(_,i)=>({id:i+1,no:i+1,name:'',g:i%2?'f':'m'}))}}
+const save=()=>{try{localStorage.setItem('seat-v2',JSON.stringify(S))}catch(e){}};
+const byId=id=>S.students.find(s=>s.id===id);
+const key=i=>Math.floor(i/S.cols)+','+i%S.cols;
+const freeCount=()=>{let n=0;for(let i=0;i<S.cols*S.rows;i++)if(!S.blocked[key(i)])n++;return n};
+if(!S.layout||!S.layout.length)arrange(false);
+
+function arrange(rand){
+ const {cols,rows}=S,n=cols*rows,L=Array(n).fill(null),free=[],pinned=new Set(),G={};
+ S.students.forEach(s=>G[s.id]=s.g);
+ for(let i=0;i<n;i++){const k=key(i);if(S.blocked[k])continue;const p=S.pins[k];
+  if(p&&G[p]&&!pinned.has(p)){L[i]=p;pinned.add(p)}else free.push(i)}
+ const pool=S.students.filter(s=>!pinned.has(s.id)).map(s=>s.id);
+ if(!rand){free.forEach((i,j)=>L[i]=pool[j]??null);S.layout=L;return}
+ const pen=A=>{let p=0;for(let i=0;i<n;i++){const a=A[i];if(a==null)continue;const c=i%cols,r0=Math.floor(i/cols),g=G[a];
+  if(S.mode==='alt'){if(c<cols-1&&A[i+1]!=null&&G[A[i+1]]===g)p++;continue}
+  if(!S.avoid)continue;let has=false,same=false;
+  for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){if(!dr&&!dc)continue;const rr=r0+dr,cc=c+dc;if(rr<0||rr>=rows||cc<0||cc>=cols)continue;const b=A[rr*cols+cc];if(b==null)continue;has=true;if(G[b]===g)same=true}
+  if(has&&!same)p++}return p};
+ let best=null,bp=1e9;
+ for(let t=0;t<40&&bp>0;t++){
+  const A=L.slice(),ps=sh(pool.slice()),fs=sh(free.slice());
+  if(S.mode==='alt'){
+   const q={m:ps.filter(id=>G[id]==='m'),f:ps.filter(id=>G[id]==='f')},par=Math.random()<.5?0:1;
+   fs.forEach(i=>{const w=((Math.floor(i/cols)+i%cols)%2===par)?'m':'f',o=w==='m'?'f':'m';
+    A[i]=q[w].length?q[w].pop():(q[o].pop()??null)});
+  }else fs.forEach((i,j)=>A[i]=ps[j]??null);
+  let p=pen(A);
+  for(let it=0;it<1500&&p>0&&free.length>1;it++){
+   const a=free[Math.random()*free.length|0],b=free[Math.random()*free.length|0];
+   if(a===b||A[a]===A[b])continue;
+   [A[a],A[b]]=[A[b],A[a]];const np=pen(A);
+   if(np<=p)p=np;else[A[a],A[b]]=[A[b],A[a]];
+  }
+  if(p<bp){bp=p;best=A}
+ }
+ S.layout=best||L;
+}
+
+function renderBar(){
+ $('#bar').innerHTML=`<button class="ib lb ${tab==='seat'?'on':''}" data-a="tab" data-v="seat">${ic('grid',18)}席</button>
+ <button class="ib lb ${tab==='list'?'on':''}" data-a="tab" data-v="list">${ic('list',18)}名簿</button><span class="sp"></span>
+ <button class="ib lb" data-a="load">${ic('up',18)}読込</button>
+ <button class="ib lb ${menu?'on':''}" data-a="menu">${ic('dl',18)}保存</button>
+ <button class="ib lb pri" data-a="shuf">${ic('shuf',18)}席替え</button>
+ ${menu?`<div class="pop"><button class="ib lb" data-a="png">${ic('img',18)}画像</button><button class="ib lb" data-a="xml">${ic('code',18)}XML</button></div>`:''}`;
+}
+function renderMain(){
+ const m=$('#main');
+ if(tab==='list'){
+  m.innerHTML=`<div id="rost"></div><button class="ib lb" data-a="add">${ic('plus',18)}追加</button>`;renderRoster();return}
+ const n=S.students.length,f=freeCount();
+ m.innerHTML=`<div class="set">
+ <div class="stp">${ic('cols',18)}<span>列</span><button class="ib sm" data-a="c-" aria-label="列">${ic('minus',16)}</button><b>${S.cols}</b><button class="ib sm" data-a="c+" aria-label="列">${ic('plus',16)}</button></div>
+ <div class="stp">${ic('rows',18)}<span>行</span><button class="ib sm" data-a="r-" aria-label="行">${ic('minus',16)}</button><b>${S.rows}</b><button class="ib sm" data-a="r+" aria-label="行">${ic('plus',16)}</button></div>
+ <div class="seg"><button class="ib lb ${S.mode==='alt'?'on':''}" data-a="mode" data-v="alt">${ic('alt',18)}交互</button><button class="ib lb ${S.mode==='mix'?'on':''}" data-a="mode" data-v="mix">${ic('mix',18)}混合</button></div>
+ ${S.mode==='mix'?`<button class="ib lb ${S.avoid?'on':''}" data-a="avoid">${ic('pair',18)}隣に同性</button>`:''}
+ <span class="cnt ${n>f?'bad':''}">${n}/${f}</span></div>
+ <div class="front">${ic('arr',16)}前</div><div class="gw"><div class="grid" id="grid" style="--c:${S.cols}"></div></div>`;
+ renderSeats();
+}
+function renderSeats(){
+ const g=$('#grid');if(!g)return;
+ const pinSet=new Set(Object.values(S.pins));let h='';
+ for(let i=0;i<S.cols*S.rows;i++){
+  const k=key(i),s=byId(S.layout[i]);
+  if(S.blocked[k]){h+=`<button class="st x" data-i="${i}" aria-label="席"></button>`;continue}
+  h+=`<button class="st ${s?s.g:''}" data-i="${i}" aria-label="席">${s?`<span class="n">${esc(s.no)}</span><span class="nm">${esc(s.name)}</span>`:''}${S.pins[k]?`<span class="pn">${ic('pin',12)}</span>`:''}</button>`;
+ }
+ g.innerHTML=h;
+ const c=document.querySelector('.cnt');if(c){const n=S.students.length,f=freeCount();c.textContent=n+'/'+f;c.classList.toggle('bad',n>f)}
+}
+function renderRoster(){
+ const pinned=new Set(Object.values(S.pins));
+ $('#rost').innerHTML=S.students.map(s=>`<div class="rw"><input class="no" data-f="no" data-id="${s.id}" value="${esc(s.no)}" inputmode="numeric" placeholder="番号" aria-label="番号"><input class="nm2" data-f="name" data-id="${s.id}" value="${esc(s.name)}" placeholder="名前" aria-label="名前"><button class="ib sm ${pinned.has(s.id)?'on':''}" data-a="pinfor" data-id="${s.id}" aria-label="席を固定">${ic('pin',18)}</button><button class="g ${s.g}" data-a="g" data-id="${s.id}">${s.g==='m'?'男':'女'}</button><button class="ib" data-a="del" data-id="${s.id}" aria-label="削除">${ic('trash')}</button></div>`).join('');
+}
+function renderModal(){
+ const o=$('#ov');
+ if(pickFor!=null){
+  const s=byId(pickFor);if(!s){pickFor=null;o.innerHTML='';return}
+  const mine=Object.keys(S.pins).find(k=>S.pins[k]===pickFor);let h='';
+  for(let i=0;i<S.cols*S.rows;i++){const k=key(i),p=byId(S.pins[k]);
+   if(S.blocked[k]){h+=`<button class="st x" disabled></button>`;continue}
+   h+=`<button class="st ${p?p.g:''}" data-a="seatpick" data-i="${i}" ${k===mine?'style="outline:2px solid var(--ac);outline-offset:1px"':''}>${p?`<span class="n">${esc(p.no)}</span>`:''}</button>`}
+  o.innerHTML=`<div class="ov" data-a="close"><div class="sh" data-stop><div class="chips"><span class="chip ${s.g}">${esc(s.no)} ${esc(s.name)}</span></div><div class="front">${ic('arr',16)}前</div><div class="gw mini"><div class="grid" style="--c:${S.cols};--w:38px;margin-bottom:12px">${h}</div></div>${mine?`<button class="ib lb" data-a="unpinfor">${ic('x',18)}固定解除</button>`:''}</div></div>`;return}
+ if(modal==null){o.innerHTML='';return}
+ const k=key(modal),bl=S.blocked[k],s=byId(S.layout[modal]),g=s?s.g:'m';
+ o.innerHTML=`<div class="ov" data-a="close"><div class="sh" data-stop>${bl?'':`<div class="rw"><input class="no" data-sf="no" value="${s?esc(s.no):''}" placeholder="番号" inputmode="numeric" aria-label="番号"><input class="nm2" data-sf="name" value="${s?esc(s.name):''}" placeholder="名前" aria-label="名前"><button class="g ${g}" data-a="sg">${g==='m'?'男':'女'}</button></div>`}
+ <div style="display:flex;gap:8px;flex-wrap:wrap">${bl?'':`<button class="ib lb ${S.pins[k]?'on':''}" data-a="spin">${ic('pin',18)}固定</button>`}<button class="ib lb ${bl?'on':''}" data-a="block">${ic('block',18)}${bl?'席を使う':'この席を空席にする'}</button></div></div></div>`;
+}
+function renderAll(){renderBar();renderMain();renderModal()}
+
+function seatStu(){let s=byId(S.layout[modal]);if(!s){const mx=Math.max(0,...S.students.map(x=>parseInt(x.no)||0));s={id:S.nid++,no:mx+1,name:'',g:'m'};S.students.push(s);S.layout[modal]=s.id}return s}
+function size(d,v){S[d]=Math.max(1,Math.min(12,S[d]+v));
+ for(const k of Object.keys(S.pins)){const [r,c]=k.split(',').map(Number);if(r>=S.rows||c>=S.cols)delete S.pins[k]}
+ for(const k of Object.keys(S.blocked)){const [r,c]=k.split(',').map(Number);if(r>=S.rows||c>=S.cols)delete S.blocked[k]}
+ arrange(false)}
+
+document.addEventListener('click',e=>{
+ const sh_=e.target.closest('[data-stop]');
+ const t=e.target.closest('[data-a]');
+ const seat=e.target.closest('[data-i]');
+ if(seat&&!e.target.closest('.ov')){modal=+seat.dataset.i;renderModal();return}
+ if(!t){if(menu){menu=false;renderBar()}return}
+ const a=t.dataset.a,id=+t.dataset.id;
+ if(a==='close'){if(sh_&&e.target.closest('[data-stop]'))return;modal=null;pickFor=null;renderModal();return}
+ if(menu&&a!=='png'&&a!=='xml'&&a!=='menu'){menu=false}
+ switch(a){
+  case 'tab':tab=t.dataset.v;break;
+  case 'menu':menu=!menu;renderBar();return;
+  case 'shuf':arrange(true);if(tab!=='seat')tab='seat';break;
+  case 'c-':size('cols',-1);break;case 'c+':size('cols',1);break;
+  case 'r-':size('rows',-1);break;case 'r+':size('rows',1);break;
+  case 'mode':S.mode=t.dataset.v;break;
+  case 'avoid':S.avoid=!S.avoid;break;
+  case 'add':{const mx=Math.max(0,...S.students.map(s=>parseInt(s.no)||0));S.students.push({id:S.nid++,no:mx+1,name:'',g:'m'});save();renderMain();const ins=document.querySelectorAll('.nm2');ins[ins.length-1].focus();return}
+  case 'g':{const s=byId(id);s.g=s.g==='m'?'f':'m';save();renderRoster();return}
+  case 'del':S.students=S.students.filter(s=>s.id!==id);for(const k of Object.keys(S.pins))if(S.pins[k]===id)delete S.pins[k];S.layout=S.layout.map(x=>x===id?null:x);break;
+  case 'pick':case 'seatpick':{const sid=a==='pick'?id:pickFor,i=a==='pick'?modal:+t.dataset.i,k=key(i);if(S.blocked[k])return;const j=S.layout.indexOf(sid),prev=S.layout[i];
+   for(const q of Object.keys(S.pins))if(S.pins[q]===sid)delete S.pins[q];
+   S.layout[i]=sid;if(j>=0&&j!==i){S.layout[j]=prev;if(S.pins[key(j)]===prev&&prev!=null)delete S.pins[key(j)]}
+   S.pins[k]=sid;modal=null;pickFor=null;break}
+  case 'sg':{const s=seatStu();s.g=s.g==='m'?'f':'m';break}
+  case 'spin':{const s=seatStu(),k=key(modal);if(S.pins[k]===s.id)delete S.pins[k];else{for(const q of Object.keys(S.pins))if(S.pins[q]===s.id)delete S.pins[q];S.pins[k]=s.id}break}
+  case 'pinfor':pickFor=id;break;
+  case 'unpinfor':for(const q of Object.keys(S.pins))if(S.pins[q]===pickFor)delete S.pins[q];pickFor=null;break;
+  case 'unpin':delete S.pins[key(modal)];modal=null;break;
+  case 'block':{const k=key(modal);if(S.blocked[k])delete S.blocked[k];else{S.blocked[k]=true;delete S.pins[k];S.layout[modal]=null}modal=null;break}
+  case 'png':menu=false;exportPng();renderBar();return;
+  case 'xml':menu=false;exportXml();renderBar();return;
+  case 'load':$('#file').click();return;
+ }
+ save();renderAll();
+});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset.sf&&modal!=null){const s=seatStu();s[t.dataset.sf]=t.value;save();renderSeats();return}if(!t.dataset.f)return;const s=byId(+t.dataset.id);s[t.dataset.f]=t.value;save();renderSeats()});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('nm2')&&!e.target.dataset.sf){const l=[...document.querySelectorAll('.nm2')];if(l[l.length-1]===e.target)document.querySelector('[data-a="add"]').click();else l[l.indexOf(e.target)+1].focus()}if(e.key==='Escape'&&(modal!=null||pickFor!=null)){modal=null;pickFor=null;renderModal()}});
+
+async function out(name,blob,alt){
+ let d=null;try{d=window.claude&&await window.claude.use('downloads')}catch(e){}
+ if(d){try{await d.save({filename:alt||name,data:blob});return}catch(e){if(e&&e.code==='declined')return}}
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+function exportPng(){
+ const {cols,rows}=S,w=112,h=92,g=10,p=24,top=46,sc=2;
+ const W=p*2+cols*w+(cols-1)*g,H=p*2+top+rows*h+(rows-1)*g,cv=document.createElement('canvas');
+ cv.width=W*sc;cv.height=H*sc;const x=cv.getContext('2d');x.scale(sc,sc);
+ const rr=(a,b,c,d,r)=>{x.beginPath();x.roundRect?x.roundRect(a,b,c,d,r):x.rect(a,b,c,d)};
+ const ff='"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif';
+ x.fillStyle='#eef2ef';x.fillRect(0,0,W,H);
+ x.fillStyle='#dcebe4';rr(p,p,W-p*2,32,12);x.fill();
+ x.fillStyle='#5f8f7d';x.font='700 15px '+ff;x.textAlign='center';x.textBaseline='middle';x.fillText('▲ 前',W/2,p+17);
+ for(let i=0;i<cols*rows;i++){
+  const r=Math.floor(i/cols),c=i%cols,px=p+c*(w+g),py=p+top+r*(h+g),k=key(i),s=byId(S.layout[i]);
+  if(S.blocked[k]){x.setLineDash([6,5]);x.strokeStyle='#c4cfc9';x.lineWidth=2;rr(px+1,py+1,w-2,h-2,14);x.stroke();x.setLineDash([]);continue}
+  x.fillStyle=s?(s.g==='m'?'#d3e3ee':'#f3d9d6'):'#fbfcfa';rr(px,py,w,h,14);x.fill();
+  if(!s)continue;
+  x.fillStyle=s.g==='m'?'#2f4a5e':'#6a3d3d';
+  x.font='700 22px '+ff;x.fillText(String(s.no),px+w/2,py+h/2-(s.name?10:0));
+  if(s.name){let fs=15;do{x.font='500 '+fs+'px '+ff;fs--}while(x.measureText(s.name).width>w-14&&fs>8);x.fillText(s.name,px+w/2,py+h/2+16)}
+ }
+ cv.toBlob(b=>out('seating.png',b),'image/png');
+}
+function exportXml(){
+ let t='<?xml version="1.0" encoding="UTF-8"?>\n<seating cols="'+S.cols+'" rows="'+S.rows+'" mode="'+S.mode+'" avoid="'+S.avoid+'">\n <students>\n';
+ S.students.forEach(s=>t+='  <student id="'+s.id+'" no="'+esc(s.no)+'" name="'+esc(s.name)+'" gender="'+s.g+'"/>\n');
+ t+=' </students>\n <seats>\n';
+ for(let i=0;i<S.cols*S.rows;i++){const k=key(i),[r,c]=k.split(','),id=S.layout[i];
+  t+='  <seat row="'+r+'" col="'+c+'"'+(S.blocked[k]?' blocked="true"':'')+(id!=null?' student="'+id+'"':'')+(S.pins[k]?' pinned="true"':'')+'/>\n'}
+ t+=' </seats>\n</seating>\n';
+ out('seating.xml',new Blob([t],{type:'application/xml'}),'seating.xml.txt');
+}
+$('#file').addEventListener('change',async e=>{
+ const f=e.target.files[0];e.target.value='';if(!f)return;
+ try{
+  const d=new DOMParser().parseFromString(await f.text(),'application/xml'),root=d.documentElement;
+  if(d.querySelector('parsererror')||root.tagName!=='seating')return;
+  const N={cols:+root.getAttribute('cols')||6,rows:+root.getAttribute('rows')||4,mode:root.getAttribute('mode')==='mix'?'mix':'alt',avoid:root.getAttribute('avoid')!=='false',pins:{},blocked:{},layout:[],nid:1,students:[]};
+  d.querySelectorAll('student').forEach(s=>{const id=+s.getAttribute('id');N.students.push({id,no:s.getAttribute('no'),name:s.getAttribute('name')||'',g:s.getAttribute('gender')==='f'?'f':'m'});N.nid=Math.max(N.nid,id+1)});
+  N.layout=Array(N.cols*N.rows).fill(null);
+  d.querySelectorAll('seat').forEach(s=>{const r=+s.getAttribute('row'),c=+s.getAttribute('col'),k=r+','+c,i=r*N.cols+c;if(i>=N.layout.length||c>=N.cols)return;
+   if(s.getAttribute('blocked')==='true')N.blocked[k]=true;
+   const st=s.getAttribute('student');if(st!=null){N.layout[i]=+st;if(s.getAttribute('pinned')==='true')N.pins[k]=+st}});
+  S=N;save();tab='seat';renderAll();
+ }catch(err){}
+});
+renderAll();
+</script>
+</body>
+</html>
